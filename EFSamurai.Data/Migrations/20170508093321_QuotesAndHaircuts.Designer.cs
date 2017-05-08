@@ -9,9 +9,10 @@ using EFSamurai.Domain;
 namespace EFSamurai.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20170508093321_QuotesAndHaircuts")]
+    partial class QuotesAndHaircuts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -49,25 +50,9 @@ namespace EFSamurai.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int?>("SecretIdentityId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SecretIdentityId");
 
                     b.ToTable("Samurais");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.SecretIdentity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Alias");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SecretIdentity");
                 });
 
             modelBuilder.Entity("EFSamurai.Domain.Quote", b =>
@@ -75,13 +60,6 @@ namespace EFSamurai.Data.Migrations
                     b.HasOne("EFSamurai.Domain.Samurai", "Samurai")
                         .WithMany("Quotes")
                         .HasForeignKey("SamuraiId");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.Samurai", b =>
-                {
-                    b.HasOne("EFSamurai.Domain.SecretIdentity", "SecretIdentity")
-                        .WithMany()
-                        .HasForeignKey("SecretIdentityId");
                 });
         }
     }

@@ -9,7 +9,14 @@ namespace EFSamurai.Domain
     {
         public int Id { get; set; }
         public string QuoteText { get; set; }
-        public bool IsReallyDeep { get; set; }
+        public QuoteType Type { get; set; }
         public virtual Samurai Samurai { get; set; }
+    }
+
+    public enum QuoteType
+    {
+        Lame,
+        Cheesy,
+        Awesome
     }
 }
