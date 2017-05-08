@@ -8,9 +8,10 @@ using EFSamurai.Data;
 namespace EFSamurai.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20170508090356_DeepStuff")]
+    partial class DeepStuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -25,7 +26,7 @@ namespace EFSamurai.Data.Migrations
 
                     b.Property<string>("QuoteText");
 
-                    b.Property<int?>("SamuraiId");
+                    b.Property<int>("SamuraiId");
 
                     b.HasKey("Id");
 
@@ -55,7 +56,8 @@ namespace EFSamurai.Data.Migrations
                 {
                     b.HasOne("EFSamurai.Domain.Samurai", "Samurai")
                         .WithMany("Quotes")
-                        .HasForeignKey("SamuraiId");
+                        .HasForeignKey("SamuraiId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

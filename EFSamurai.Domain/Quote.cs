@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace EFSamurai.Domain
@@ -8,7 +9,7 @@ namespace EFSamurai.Domain
     {
         public int Id { get; set; }
         public string QuoteText { get; set; }
+        public bool IsReallyDeep { get; set; }
         public virtual Samurai Samurai { get; set; }
-        public int SamuraiId { get; set; }
     }
 }
