@@ -8,29 +8,14 @@ using EFSamurai.Data;
 namespace EFSamurai.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20170508082521_Fourth")]
+    partial class Fourth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("EFSamurai.Domain.Quote", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("QuoteText");
-
-                    b.Property<int>("SamuraiId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SamuraiId");
-
-                    b.ToTable("Quote");
-                });
 
             modelBuilder.Entity("EFSamurai.Domain.Samurai", b =>
                 {
@@ -47,14 +32,6 @@ namespace EFSamurai.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Samurais");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.Quote", b =>
-                {
-                    b.HasOne("EFSamurai.Domain.Samurai", "Samurai")
-                        .WithMany("Quotes")
-                        .HasForeignKey("SamuraiId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
