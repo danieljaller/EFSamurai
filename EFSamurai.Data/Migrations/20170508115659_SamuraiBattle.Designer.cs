@@ -9,9 +9,10 @@ using EFSamurai.Domain;
 namespace EFSamurai.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20170508115659_SamuraiBattle")]
+    partial class SamuraiBattle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -21,8 +22,6 @@ namespace EFSamurai.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("BattleLogId");
 
                     b.Property<string>("Description");
 
@@ -36,41 +35,7 @@ namespace EFSamurai.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BattleLogId");
-
                     b.ToTable("Battles");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.BattleEvent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("BattleLogId");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("EventTime");
-
-                    b.Property<string>("Summary");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BattleLogId");
-
-                    b.ToTable("BattleEvent");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.BattleLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BattleLog");
                 });
 
             modelBuilder.Entity("EFSamurai.Domain.Quote", b =>
@@ -114,19 +79,6 @@ namespace EFSamurai.Data.Migrations
                     b.ToTable("Samurais");
                 });
 
-            modelBuilder.Entity("EFSamurai.Domain.SamuraiBattle", b =>
-                {
-                    b.Property<int>("SamuraiId");
-
-                    b.Property<int>("BattleId");
-
-                    b.HasKey("SamuraiId", "BattleId");
-
-                    b.HasIndex("BattleId");
-
-                    b.ToTable("SamuraiBattles");
-                });
-
             modelBuilder.Entity("EFSamurai.Domain.SecretIdentity", b =>
                 {
                     b.Property<int>("Id")
@@ -137,20 +89,6 @@ namespace EFSamurai.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SecretIdentity");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.Battle", b =>
-                {
-                    b.HasOne("EFSamurai.Domain.BattleLog", "BattleLog")
-                        .WithMany()
-                        .HasForeignKey("BattleLogId");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.BattleEvent", b =>
-                {
-                    b.HasOne("EFSamurai.Domain.BattleLog", "BattleLog")
-                        .WithMany("BattleEvents")
-                        .HasForeignKey("BattleLogId");
                 });
 
             modelBuilder.Entity("EFSamurai.Domain.Quote", b =>
@@ -165,19 +103,6 @@ namespace EFSamurai.Data.Migrations
                     b.HasOne("EFSamurai.Domain.SecretIdentity", "SecretIdentity")
                         .WithMany()
                         .HasForeignKey("SecretIdentityId");
-                });
-
-            modelBuilder.Entity("EFSamurai.Domain.SamuraiBattle", b =>
-                {
-                    b.HasOne("EFSamurai.Domain.Battle", "Battle")
-                        .WithMany()
-                        .HasForeignKey("BattleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EFSamurai.Domain.Samurai", "Samurai")
-                        .WithMany()
-                        .HasForeignKey("SamuraiId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
