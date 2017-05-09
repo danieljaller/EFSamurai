@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using EFSamurai.Data.Migrations;
 using EFSamurai.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Battle = EFSamurai.Domain.Battle;
 
 namespace EFSamurai.Data
@@ -21,6 +23,11 @@ namespace EFSamurai.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Domain.SamuraiBattle>().HasKey(t => new {t.SamuraiId, t.BattleId});
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Cascade;
+            }
         }
     }
 }
