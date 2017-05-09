@@ -19,6 +19,7 @@ namespace EFSamurai.App
         {
             while (_keepGoing)
             {
+
                 Menu();
             }
         }
@@ -33,11 +34,78 @@ namespace EFSamurai.App
                 { 4, ListAllSamuraiNames },
                 { 5, ListAllSamuraiNamesOrderByName },
                 { 6, ListAllSamuraiNamesOrderByDescendingId },
-                { 7, ClearDatabase }
+                { 7, ClearDatabase },
+                { 8, FindSamuraiWithRealName },
+                { 9, ListQuotesOfType },
+                { 10, ListAllBattles }
             };
             Console.WriteLine("1: Add one samurai\n2: Add some samurais\n3: Quit\n4: List all samurais" +
-                              "\n5: List all samurais, order by name\n6: List all samurais, order by descending id\n7: Clear database");
+                              "\n5: List all samurais, order by name\n6: List all samurais, order by descending id\n7: Clear database" +
+                              "\n8: Find samurai by real name\n9: List quotes of type\n10: List battles");
             menu[int.Parse(Console.ReadLine())].Invoke();
+        }
+
+        private static void FindSamuraiWithRealName()
+        {
+            string name = GetString("Name");
+            var samuraisFound = new List<string>();
+            using (var content = new SamuraiContext())
+            {
+                samuraisFound = content.Samurais.Where(x => x.Name == name).Select(x => x.Name).ToList();
+            }
+            foreach (var samurai in samuraisFound)
+            {
+                Console.WriteLine(samurai);
+            }
+            if (samuraisFound.Count == 0)
+                Console.WriteLine($"No samurais by the name {name} was found");
+        }
+
+        private static void ListQuotesOfType()
+        {
+            var quoteType = GetQuoteType();
+            var quoteList = new List<Quote>();
+
+            using (var context = new SamuraiContext())
+            {
+                quoteList = context.Samurais.SelectMany(x => x.Quotes.Where(y => y.Type == quoteType)).ToList();
+            }
+            foreach (var quote in quoteList)
+            {
+                Console.WriteLine($"\"{quote.QuoteText}\"");
+            }
+            if (quoteList.Count == 0)
+                Console.WriteLine($"No quote of type {quoteType} was found");
+        }
+
+        private static void ListAllBattles()
+        {
+            var startDate = GetDate("Start date");
+            var endDate = GetDate("End date");
+            var isBrutal = GetNullableBool("Brutal battle?");
+            var battlesFound = new List<Battle>();
+
+            using (var context = new SamuraiContext())
+            {
+                if (isBrutal != null)
+                {
+                    battlesFound = context.Battles.Where(x => x.IsBrutal == isBrutal && x.StartDate > startDate &&
+                                                              x.StartDate < endDate)
+                        .ToList();
+                }
+                else
+                {
+                    battlesFound = context.Battles.Where(x => x.StartDate > startDate &&
+                                                              x.StartDate < endDate)
+                        .ToList();
+                }
+            }
+            foreach (var battle in battlesFound)
+            {
+                Console.WriteLine(battle.Name);
+            }
+            if(battlesFound.Count == 0)
+                Console.WriteLine("No matching battles were found.");
         }
 
         private static void ClearDatabase()
@@ -153,6 +221,24 @@ namespace EFSamurai.App
             }
         }
 
+        private static bool? GetNullableBool(string type)
+        {
+            while (true)
+            {
+                Console.Write($"{type}? y/n (leave blank if null): ");
+                var katanaAnswer = Console.ReadLine();
+                if (katanaAnswer.ToLower() == "n")
+                    return false;
+
+                if (katanaAnswer.ToLower() == "y")
+                    return true;
+
+
+                if (string.IsNullOrWhiteSpace(katanaAnswer))
+                    return null;
+            }
+        }
+
         private static List<Quote> GetQuote()
         {
             var keepAddingQuote = true;
@@ -257,7 +343,7 @@ namespace EFSamurai.App
 
         private static DateTime GetDate(string type)
         {
-            Console.WriteLine($"{type}: ");
+            Console.Write($"{type}: ");
 
             return Convert.ToDateTime(Console.ReadLine());
         }
